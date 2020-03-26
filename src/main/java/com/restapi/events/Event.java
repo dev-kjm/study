@@ -22,7 +22,7 @@ public class Event {
     private int limitOfEnrollment;
     private boolean offline;
     private boolean free;
-    private EventStatus eventStatus;
+    private EventStatus eventStatus = EventStatus.DRAFT;
 
 
 }
