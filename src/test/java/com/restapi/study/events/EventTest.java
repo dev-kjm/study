@@ -1,4 +1,4 @@
-package com.restapi.events;
+package com.restapi.study.events;
 
 import org.junit.jupiter.api.Test;
 
