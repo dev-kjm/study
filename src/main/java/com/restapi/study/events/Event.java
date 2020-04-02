@@ -2,17 +2,13 @@ package com.restapi.study.events;
 
 
 import lombok.*;
-import org.springframework.stereotype.Repository;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Builder @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter @EqualsAndHashCode(of = "id")
-@Repository
+@Entity
 public class Event {
 
     @Id @GeneratedValue

@@ -1,12 +1,11 @@
 package com.restapi.study.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,26 +26,24 @@ class EventControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @MockBean
-    EventRepository repository;
-
 
     @Test
     void createEvent() throws Exception {
         Event event = Event.builder()
-            .name("Spring")
-            .description("REST API Development with Spring")
-            .beginEnrollmentDateTime(LocalDateTime.of(2018, 11, 23, 14, 21))
-            .closeEnrollmentDateTime(LocalDateTime.of(2018, 11, 24, 14, 21))
-            .beginEventDateTime(LocalDateTime.of(2018, 11, 25, 14, 21))
-            .endEventDateTime(LocalDateTime.of(2018, 11, 26, 14, 21))
-            .basePrice(100)
-            .maxPrice(200)
-            .limitOfEnrollment(100)
-            .location("강남역 D2 스타텁 팩토리")
-            .build();
-        event.setId(10);
-        Mockito.when(repository.save(event)).thenReturn(event);
+                .name("Spring")
+                .description("REST API Development with Spring")
+                .beginEnrollmentDateTime(LocalDateTime.of(2018, 11, 23, 14, 21))
+                .closeEnrollmentDateTime(LocalDateTime.of(2018, 11, 24, 14, 21))
+                .beginEventDateTime(LocalDateTime.of(2018, 11, 25, 14, 21))
+                .endEventDateTime(LocalDateTime.of(2018, 11, 26, 14, 21))
+                .basePrice(100)
+                .maxPrice(200)
+                .limitOfEnrollment(100)
+                .location("강남역 D2 스타텁 팩토리")
+                .free(true)
+                .offline(false)
+                .eventStatus(EventStatus.PUBLISHED)
+                .build();
 
         mockMvc.perform(post("/api/events")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -54,6 +51,8 @@ class EventControllerTest {
                     .content(objectMapper.writeValueAsString(event)))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("id").exists());
+                .andExpect(jsonPath("id").exists())
+                .andExpect(jsonPath("free").value(Matchers.not(true)))
+                .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()));
     }
 }
